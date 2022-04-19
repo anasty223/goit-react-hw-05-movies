@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
 
-import { default as axios } from "axios";
-const API_Key = "eba0388c934688725105b53c98cf82ca";
+import { getReviews } from "../servises/api";
+
 const Reviews = () => {
   const paramsReview = useParams();
+  const paramsReviewsId = paramsReview.movieId;
 
   const [reviewList, setReviewList] = useState("");
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${paramsReview.movieId}/credits?api_key=${API_Key}&language=en-US&page=1`
-      )
+    getReviews(paramsReviewsId)
       .then(function (response) {
         setReviewList(response.data);
 
@@ -21,7 +18,7 @@ const Reviews = () => {
       .catch(function (error) {
         console.log(error);
       });
-  }, [paramsReview.movieId]);
+  }, [paramsReviewsId]);
   console.log(reviewList?.results);
   return (
     <div>

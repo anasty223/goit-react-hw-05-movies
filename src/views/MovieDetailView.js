@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { AiOutlineArrowLeft } from "react-icons/ai";
-import { default as axios } from "axios";
+import { movieDetails } from "../servises/api";
 import { Link, Outlet, useParams, useNavigate } from "react-router-dom";
 
 const H1 = styled.h1`
@@ -54,21 +54,17 @@ const Genre = styled.li`
 `;
 
 const MovieDetailView = () => {
-  const API_Key = "eba0388c934688725105b53c98cf82ca";
   const BASE_URL = "https://image.tmdb.org/t/p/w500/";
   const params = useParams();
+  const navigate = useNavigate();
+  const paramsId = params.movieId;
+
   const [movieData, setMovieData] = useState([]);
   const [releaseData, setReleaseData] = useState([]);
-
-  const navigate = useNavigate();
-
   const goBack = () => navigate(-1);
 
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/movie/${params.movieId}?api_key=${API_Key}&language=en-US&page=1`
-      )
+    movieDetails(paramsId)
       .then(function (response) {
         setMovieData(response.data);
         setReleaseData(response.data.release_date);
@@ -76,7 +72,7 @@ const MovieDetailView = () => {
       .catch(function (error) {
         console.log(error);
       });
-  }, [params.movieId]);
+  }, [paramsId]);
 
   return (
     <div>

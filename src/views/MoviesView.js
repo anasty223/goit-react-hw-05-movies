@@ -2,18 +2,13 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { searchFilms } from "../servises/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 axios.defaults.baseURL = "https://api.themoviedb.org/3";
-const API_Key = "eba0388c934688725105b53c98cf82ca";
 const BASE_URL = "https://image.tmdb.org/t/p/w500/";
 
-const Img = styled.img`
-  display: block;
-  width: 200px;
-  height: 300px;
-  object-fit: contain;
-  margin-bottom: 10px;
-`;
 const H1 = styled.h1`
   color: grey;
 `;
@@ -75,7 +70,7 @@ const ImgRequest = styled.img`
   object-fit: contain;
   margin-bottom: 10px;
 `;
- const MoviesView = () => {
+const MoviesView = () => {
   const [movies, setMovies] = useState([]);
   const [searchMouvie, setSearchMovie] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -86,7 +81,22 @@ const ImgRequest = styled.img`
 
   const handleSearchFilm = (e) => {
     e.preventDefault();
-    if (searchMouvie) {
+
+    const searchMouvieNorm = searchMouvie.toLowerCase().trim();
+
+    if (!searchMouvieNorm) {
+      toast.error("🦄Please enter the text!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    if (searchMouvieNorm) {
       setSearchParams({ query: searchMouvie });
     }
   };
@@ -94,12 +104,8 @@ const ImgRequest = styled.img`
   useEffect(() => {
     let query = searchParams.get("query");
     if (query) {
-      axios
-        .get(
-          `https://api.themoviedb.org/3/search/movie?api_key=${API_Key}&query=${query}&language=en-US&page=1&include_adult=false`
-        )
+      searchFilms(query)
         .then(function (response) {
-          // handle success
           setMovies(response);
           console.log(response);
         })
@@ -115,6 +121,7 @@ const ImgRequest = styled.img`
         <H1>Enter a movie request</H1>
         <Input onChange={handleSetFilms} />
         <Button>search</Button>
+        <ToastContainer />
       </form>
 
       {movies && (

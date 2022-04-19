@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import styled from "styled-components";
-import { default as axios } from "axios";
+import { getTrending } from "../servises/api";
 
 const H1 = styled.h1`
   color: grey;
@@ -42,17 +42,11 @@ const Img = styled.img`
 `;
 const HomeWiew = () => {
   const [moviesList, setMoviesList] = useState([]);
-  const API_Key = "eba0388c934688725105b53c98cf82ca";
   const BASE_URL = "https://image.tmdb.org/t/p/w500/";
   useEffect(() => {
-    axios
-      .get(
-        `https://api.themoviedb.org/3/trending/all/day?api_key=${API_Key}&language=en-US&page=1`
-      )
+    getTrending()
       .then(function (response) {
         setMoviesList(response);
-
-        console.log(response);
       })
       .catch(function (error) {
         console.log(error);
