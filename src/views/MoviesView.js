@@ -76,7 +76,7 @@ const MoviesView = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSetFilms = (e) => {
-    setSearchMovie(e.target.value);
+    setSearchMovie(e.target.value.trim());
   };
 
   const handleSearchFilm = (e) => {
